@@ -1,53 +1,54 @@
 import { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, View } from "react-native";
 import { COLORS, SIZES } from "../constants/theme";
-import AsyncStorage from "@react-native-async-storage/async-storage"
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import ScreenHeaderBtn from "../components/ScreenHeaderBtn";
 import Welcome from "../components/Welcome";
 import PopularMeditation from "../components/PopularMeditation";
 import DailyMeditation from "../components/DailyMeditation";
-import DailyQuote from "../components/DailyQuote";
+import { useTheme } from "../context/ThemeProvider";
 
 const Home = () => {
-
     const [userDetails, setUserDetails] = useState(null);
 
-    const loadUserDetails = async() => {
-        const user = await AsyncStorage.getItem("userDetails");
-        console.log("user", user);
-        setUserDetails(user);
-    };
-    // Q: Why can I not use "userDetails = user", and have to use the setUserDetails. 
-    // A: This line would mutate a variable directly, but:
-    //      -It does not tell React that the state has changed.
-    //      -React will not re-render your component.
-    //      -It can lead to stale or buggy UI because React didn’t "see" the change.
+  useEffect(() => {
+    loadUserDetails();
+  }, []);
 
-    useEffect(() => {
-        loadUserDetails();
-    }, []);
-    // React’s useEffect runs after the component renders, not during the initial parse. 
-    // So declaring loadUserDetails() after useEffect() is fine.
+  const loadUserDetails = async () => {
+    const user = await AsyncStorage.getItem("userDetails");
+    console.log("user", user);
+    setUserDetails(user);
+  };
+  const { theme, toggleTheme } = useTheme();
+  console.log('theme',theme);
 
+  const isDarkMode = theme === "dark";
     return (
      <>
-        <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.lightWhite }}>
-            <ScreenHeaderBtn/>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <View
-                style={{
-                    flex: 1,
-                    padding: SIZES.medium,
-                }}
-                testID="screensDisplay"
-                >
-                    <Welcome userDetails={userDetails?JSON.parse(userDetails):null}/>
-                    <DailyQuote/>
-                    <PopularMeditation/>
-                    <DailyMeditation/>
-                </View>
-            </ScrollView>
-        </SafeAreaView>
+       <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: isDarkMode ? COLORS.darkBackground : COLORS.lightWhite,
+      }}
+    >
+     <ScreenHeaderBtn/>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View
+          style={{
+            flex: 1,
+            padding: SIZES.medium,
+
+          }}
+          testID="screensDisplay"
+        >
+
+<Welcome userDetails={userDetails ? JSON.parse(userDetails) : null} isDarkMode={isDarkMode}/>
+<PopularMeditation isDarkMode={isDarkMode}/>
+<DailyMeditation isDarkMode={isDarkMode}/>
+</View>
+      </ScrollView>
+    </SafeAreaView>
      </>
     );
   };

@@ -7,6 +7,7 @@ import { Switch, View } from "react-native";
 import { TouchableOpacity } from "react-native";
 import ScreenHeaderBtn from "../../components/ScreenHeaderBtn";
 
+// This component manages the logic for switching themes (light or dark mode).
 const ThemeChange = () => {
     console.log("hello from themechange");
 
@@ -15,9 +16,10 @@ const ThemeChange = () => {
 
     const isDarkMode = theme === "dark";
 
+    // Return the Theme Change panel in the setting page.
     return (
         <SafeAreaView
-        style={{
+            style={{
             flex: 1,
             backgroundColor: isDarkMode ? COLORS.darkBackground : COLORS.lightWhite,
             }}

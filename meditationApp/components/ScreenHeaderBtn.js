@@ -23,7 +23,7 @@
                 </>  
                 :
                 <>
-                    <TouchableOpacity style={styles.btnContainer} onPress={()=>router.push("/settings/ThemeChange")}>
+                    <TouchableOpacity style={styles.btnContainer} onPress={()=>router.push("/settings")}>
                         <Image source={icons.settings} style={styles.image} />
                     </TouchableOpacity>
                 </>
